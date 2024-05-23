@@ -82,39 +82,28 @@ class Snake(GameObject):
             self.direction = self.next_direction
             self.next_direction = None
 
-    #  Возвращает координаты новой головы.
-    def new_head(self) -> tuple[int, int]:
-        pos_x, pos_y = self.get_head_position()
-        return (
-            (pos_x + self.direction[0] * GRID_SIZE) % SCREEN_WIDTH,
-            (pos_y + self.direction[1] * GRID_SIZE) % SCREEN_HEIGHT
-        )
-
-    #  Увиличивает змейку на один сегмент.
-    def grow_up(self, new_segment: tuple[int, int]) -> None:
-        self.position.insert(0, new_segment)
-
-    #  Уменьшает змейку на один сегмент с конца.
-    def cut_tail(self) -> None:
-        self.position.pop()
-
     #  Возвращает позицию головы змейки
     def get_head_position(self) -> tuple[int, int]:
         return self.position[0]
 
     #  Обновляет позицию змейки
-    def move(self, new_head: tuple[int, int]) -> None:
+    def move(self) -> None:
+        head_x, head_y = self.get_head_position()
+        new_head = (
+            (head_x + self.direction[0]) % SCREEN_WIDTH,
+            (head_y + self.direction[1]) % SCREEN_HEIGHT
+        )
         self.position.insert(0, new_head)
-        self.last = self.position.pop()
+        self.position.pop()
 
     def draw(self):
-        for position in self.positions[:-1]:
+        for position in self.position[:-1]:
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
         # Отрисовка головы змейки
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
+        head_rect = pygame.Rect(self.position[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, head_rect)
         pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
 
@@ -150,10 +139,9 @@ def main():
     running = True
     while running:
         clock.tick(SPEED)
-        handle_keys(Snake)
-        Snake.update_direction()
-        Snake.move()
-
+        handle_keys(snake)
+        snake.update_direction()
+        snake.move()
         screen.fill(BOARD_BACKGROUND_COLOR)
         apple.draw()
         snake.draw()
