@@ -12,6 +12,7 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+DEFAULT_POS: tuple[int, int] = (0, 0)
 # Скорость игры.
 SPEED = 10
 
@@ -32,10 +33,10 @@ clock = pygame.time.Clock()
 class GameObject:
     """Родительский класс игры."""
 
-    def __init__(self, body_color: tuple[int, int, int]):
+    def __init__(self, body_color: tuple[int, int, int], position=DEFAULT_POS):
         """Инициализация змейки с указанным цветом тела."""
         self.body_color: tuple[int, int, int] = body_color
-        self.position: tuple[int, int] = (0, 0)
+        self.position = position
 
     def draw(self) -> None:
         """Метод для отрисовки объекта на заданной поверхности."""
@@ -45,9 +46,9 @@ class GameObject:
 class Apple(GameObject):
     """Дочерний класс Gameobject объекта apple."""
 
-    def __init__(self, body_color=APPLE_COLOR):
+    def __init__(self, body_color=APPLE_COLOR, position=DEFAULT_POS):
         """Инициализация змейки с указанным цветом тела."""
-        super().__init__(body_color)
+        super().__init__(body_color, position)
         self.randomize_position()
 
     def randomize_position(self) -> None:
@@ -65,10 +66,11 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Дочерний класс Gameobject объекта snake."""
 
-    def __init__(self, body_color: tuple[int, int, int] = SNAKE_COLOR):
+    def __init__(self, body_color=SNAKE_COLOR, position=DEFAULT_POS):
         """Инициализация змейки с указанным цветом тела."""
+        super().__init__(body_color, position)
         super().__init__(body_color)
-        self.length: int = 1
+        self.length = 1
         self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
         self.direction = RIGHT
         self.next_direction = RIGHT
