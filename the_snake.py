@@ -30,6 +30,8 @@ clock = pygame.time.Clock()
 
 
 class GameObject:
+    """Родительский класс игры."""
+
     def __init__(self, body_color: tuple[int, int, int]):
         """Инициализация змейки с указанным цветом тела."""
         self.body_color: tuple[int, int, int] = body_color
@@ -41,7 +43,8 @@ class GameObject:
 
 
 class Apple(GameObject):
-    """Дочерний класс Gameobject объекта apple """
+    """Дочерний класс Gameobject объекта apple."""
+
     def __init__(self, body_color=APPLE_COLOR):
         """Инициализация змейки с указанным цветом тела."""
         super().__init__(body_color)
@@ -60,7 +63,8 @@ class Apple(GameObject):
 
 
 class Snake(GameObject):
-    """Дочерний класс Gameobject объекта snake """
+    """Дочерний класс Gameobject объекта snake."""
+
     def __init__(self, body_color: tuple[int, int, int] = SNAKE_COLOR):
         """Инициализация змейки с указанным цветом тела."""
         super().__init__(body_color)
