@@ -20,7 +20,7 @@ SPEED = 10
 APPLE_COLOR: tuple[int, int, int] = (255, 0, 0)
 SNAKE_COLOR: tuple[int, int, int] = (0, 255, 0)
 BORDER_COLOR: tuple[int, int, int] = (93, 216, 228)
-BACKGROUND_COLOR: tuple[int, int, int] = (0, 0, 0)
+BOARD_BACKGROUND_COLOR: tuple[int, int, int] = (0, 0, 0)
 
 # Настройка игрового окна.
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -33,7 +33,8 @@ clock = pygame.time.Clock()
 class GameObject:
     """Родительский класс игры."""
 
-    def __init__(self, body_color=BACKGROUND_COLOR, position=DEFAULT_POS):
+    def __init__(self, body_color=BOARD_BACKGROUND_COLOR,
+                 position=DEFAULT_POS):
         """Инициализация змейки с указанным цветом тела."""
         self.body_color = body_color
         self.position = position
@@ -121,7 +122,7 @@ class Snake(GameObject):
         # Затирание последнего сегмента
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
-            pygame.draw.rect(screen, BACKGROUND_COLOR, last_rect)
+            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
 
 def handle_keys(snake: Snake) -> None:
@@ -157,7 +158,7 @@ def main() -> None:
             snake.length += 1
             apple.randomize_position()
 
-        screen.fill(BACKGROUND_COLOR)
+        screen.fill(BOARD_BACKGROUND_COLOR)
         apple.draw()
         snake.draw()
         pygame.display.update()
