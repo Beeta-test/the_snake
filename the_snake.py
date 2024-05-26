@@ -35,7 +35,7 @@ class GameObject:
 
     def __init__(self, body_color=BACKGROUND_COLOR, position=DEFAULT_POS):
         """Инициализация змейки с указанным цветом тела."""
-        self.body_color: tuple[int, int, int] = body_color
+        self.body_color = body_color
         self.position = position
 
     def draw(self) -> None:
