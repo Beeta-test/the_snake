@@ -17,10 +17,10 @@ DEFAULT_POS = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 SPEED = 10
 
 # Цвета объектов и поля.
-APPLE_COLOR: tuple[int, int, int] = (255, 0, 0)
-SNAKE_COLOR: tuple[int, int, int] = (0, 255, 0)
-BORDER_COLOR: tuple[int, int, int] = (93, 216, 228)
-BOARD_BACKGROUND_COLOR: tuple[int, int, int] = (0, 0, 0)
+APPLE_COLOR = (255, 0, 0)
+SNAKE_COLOR = (0, 255, 0)
+BORDER_COLOR = (93, 216, 228)
+BOARD_BACKGROUND_COLOR = (0, 0, 0)
 
 # Настройка игрового окна.
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -33,11 +33,10 @@ clock = pg.time.Clock()
 class GameObject:
     """Родительский класс игры."""
 
-    def __init__(self, body_color=BOARD_BACKGROUND_COLOR,
-                 position=DEFAULT_POS):
+    def __init__(self, body_color=BOARD_BACKGROUND_COLOR):
         """Инициализация игрового объекта с указанным цветом тела."""
         self.body_color = body_color
-        self.position = position
+        self.position = DEFAULT_POS
 
     def draw(self) -> None:
         """Метод для отрисовки объекта на заданной поверхности."""
@@ -47,21 +46,18 @@ class GameObject:
 class Apple(GameObject):
     """Дочерний класс GameObject для объекта Apple."""
 
-    def __init__(self,
-                 body_color=APPLE_COLOR, position=DEFAULT_POS):
+    def __init__(self, body_color=APPLE_COLOR):
         """Инициализация яблока с указанным цветом тела."""
-        super().__init__(body_color, position)
-        self.randomize_position([])
+        super().__init__(body_color)
+        self.randomize_position()
 
-    def randomize_position(self,
-                           occupied_positions: list[tuple[int, int]]) -> None:
-        """Задает случайные координаты для яблока."""
-        while True:
-            new_position = (randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-                            randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
-            if new_position not in occupied_positions:
-                self.position = new_position
-                break
+    def randomize_position(self, occupied_positions=[DEFAULT_POS]) -> None:
+        """Задает случайные координаты для яблока, избегая занятых позиций."""
+        while self.position in occupied_positions:
+            self.position = (
+                randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+                randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+            )
 
     def draw(self) -> None:
         """Отрисовывает яблоко на экране."""
@@ -73,9 +69,9 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Дочерний класс GameObject для объекта Snake."""
 
-    def __init__(self, body_color=SNAKE_COLOR, position=DEFAULT_POS):
+    def __init__(self, body_color=SNAKE_COLOR):
         """Инициализация змейки с указанным цветом тела."""
-        super().__init__(body_color, position)
+        super().__init__(body_color)
         self.length = 1
         self.positions = [self.position]
         self.direction = RIGHT
@@ -162,7 +158,7 @@ def main() -> None:
             snake.length += 1
             apple.randomize_position(snake.positions)
 
-        if snake.positions[0] in snake.positions[1:]:
+        if snake.get_head_position() in snake.positions[1:]:
             screen.fill(BOARD_BACKGROUND_COLOR)
             snake.reset()
 
